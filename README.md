@@ -1,70 +1,29 @@
-# Getting Started with Create React App
+# ThinkTree
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A simple web app for clear decision making.
 
-## Available Scripts
+## How it works
 
-In the project directory, you can run:
+Decision making can be difficult. This app aims to streamline the process. You enter the variables, the uncertainties, and let the app visualize the best option for you. First,
 
-### `npm start`
+### Add all possible options
+On the column on the right. For choosing an occupation, this might be doctor, teacher, software engineer, etc.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Add factors in consideration.
+On the column on the left. E.g. career growth, years to study, salary, reputation, etc.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Adjust the weights
+A software engineering degree typically takes 4 years, with an average salary of $100,000 (probably). A medical degree takes, say 10 years. Input this into the app and let it do the work.
 
-### `npm test`
+### Deal with uncertainties
+Often, decision making is not this straightforward. You might worry about failing medical school, or programming not being your thing. Input the percentage of how likely this is going to happen, and how that would affect your choices if it did.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Calculate choice
+Concise and clear.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Current TODO:
+- Rename 'Depends' to 'Factors'
+- Add hints on the columns, "Depends on..." for Factors, "Possible options" for Options
+- Heightened visibility of selected Boxes. If a Box (either Factor or Option) is clicked, that box and all its connections should be easily visible. Probably everything else needs to be dulled, and put behind the highlighted components.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
