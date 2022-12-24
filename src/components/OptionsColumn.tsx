@@ -24,21 +24,21 @@ const OptionsColumn: React.FC<Props> = ({ getRefsList, getNbList }) => {
   );
 
   const addOption = () => {
-    setOptionsNbList([...optionsNbList, optionsNbList.length+1])
-  }
+    setOptionsNbList([...optionsNbList, optionsNbList.length + 1]);
+  };
+
+  const boxClicked = () => {};
 
   return (
     <div className="column options-column">
       {optionsNbList.map((n) => (
-        <ArcherElement id={"option" + n} key={"option"+n}>
+        <ArcherElement id={"option" + n} key={"option" + n}>
           <div>
-            <Box addRef={addRef} />
+            <Box id={n} type="option" addRef={addRef} boxClicked={boxClicked} />
           </div>
         </ArcherElement>
       ))}
-      <button onClick={addOption}>
-        +
-      </button>
+      <button className="add-box-button" onClick={addOption}>+</button>
     </div>
   );
 };

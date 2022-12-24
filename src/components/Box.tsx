@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./styles.css";
-import { ArcherElement } from "react-archer";
 
 export interface BoxI {
   ref: React.RefObject<HTMLDivElement>;
 }
 
 interface Props {
+  id: number;
+  type: string;
   addRef: (ref: React.RefObject<HTMLDivElement>) => void;
+  boxClicked: (id: number) => void;
+  addChild?: () => void;
 }
 
-const Box: React.FC<Props> = ({ addRef }) => {
+const Box: React.FC<Props> = ({ id, type, addRef, boxClicked, addChild }) => {
   const [contentEditable, setContentEditable] = useState<"true" | "false">(
     "false"
   );
@@ -19,6 +22,7 @@ const Box: React.FC<Props> = ({ addRef }) => {
   const handleClick: () => void = () => {
     setContentEditable("true");
     boxRef.current?.classList.add("box__active");
+    boxClicked(id);
   };
 
   useEffect(() => {
@@ -40,13 +44,14 @@ const Box: React.FC<Props> = ({ addRef }) => {
   }, [addRef, boxRef]);
 
   return (
-      <div className="box" onClick={handleClick} ref={boxRef}>
-        <span
-          className="textarea"
-          role="textbox"
-          contentEditable={contentEditable}
-        ></span>
-      </div>
+    <div className="box" onClick={handleClick} ref={boxRef}>
+      <span
+        className="textarea"
+        role="textbox"
+        contentEditable={contentEditable}
+      ></span>
+      {type === "factor" && <button className="add-child-button" onClick={addChild}>+</button>}
+    </div>
   );
 };
 

@@ -1,54 +1,65 @@
-
-
-
 .textarea {
-    max-width: 200px;
-    min-width: 100px;
-    /* border: 1px solid #cccccc; */
-    font-family: inherit;
-    font-size: inherit;
-    padding: 3px 8px;
-    display: block;
-    overflow-wrap: break-word; 
-    resize: none;
-    min-height: 40px;
-    line-height: 20px;
-  }
-  
-  .textarea[contenteditable]:empty::before {
-    content: "Placeholder";
-    color: lightgrey;
-  }
+  max-width: 200px;
+  min-width: 100px;
+  /* border: 1px solid #cccccc; */
+  font-family: inherit;
+  font-size: inherit;
+  padding: 3px 8px;
+  display: block;
+  overflow-wrap: break-word;
+  resize: none;
+  min-height: 40px;
+  line-height: 20px;
+}
 
-  .column {
-    flex-grow: 1;
-    height: 100%;
-    max-width: 200px;
-    /* border: 5px solid grey; */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    
-  }
+.textarea[contenteditable]:empty::before {
+  content: "Placeholder";
+  color: lightgrey;
+}
 
-  .box {
-    width: 100%;
-    border-radius: 10px;
-  }
+.column {
+  flex-grow: 1;
+  height: 100%;
+  max-width: 200px;
+  /* border: 5px solid grey; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  position: relative;
 
-  .box__active {
-    border: 2px solid white;
-  }
+}
+
+.box {
+  width: 100%;
+  border-radius: 10px;
+  color: lightgrey;
+  position: relative
+}
+
+.box__active {
+  border: 2px solid white;
+}
 
 .options-column .box {
   background-color: #507158;
 }
 
-button {
+.add-box-button {
   position: absolute;
   bottom: 20px;
+  left: 37%;
   width: 50px;
   height: 50px;
   border-radius: 25px;
   border: none;
+}
+
+.add-child-button {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 12.5px;
+  border: none;
+  right: -12px;
+  top: 7px;
 }

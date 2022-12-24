@@ -23,7 +23,7 @@ Concise and clear.
 
 
 ## Current TODO:
-- Rename 'Depends' to 'Factors'
-- Add hints on the columns, "Depends on..." for Factors, "Possible options" for Options
-- Heightened visibility of selected Boxes. If a Box (either Factor or Option) is clicked, that box and all its connections should be easily visible. Probably everything else needs to be dulled, and put behind the highlighted components.
+Easy - Make the text in Boxes more visible. Curently, selected Boxes become brighter, making the text hard to read.
+Hard - Heightened visibility of selected Options Boxes. If an Option Box is clicked, that box and all its connections should be easily visible. Currently only works for Factors Boxes.
+Hard - make it possible to add child Boxes to Factors for dealing with uncertainty
 
