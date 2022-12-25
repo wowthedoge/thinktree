@@ -2,7 +2,7 @@
 
 A simple web app for clear decision making.
 
-## How it works
+## How it works (not done)
 
 Decision making can be difficult. This app aims to streamline the process. You enter the variables, the uncertainties, and let the app visualize the best option for you. First,
 
@@ -24,6 +24,9 @@ Concise and clear.
 
 ## Current TODO:
 Easy - Make the text in Boxes more visible. Curently, selected Boxes become brighter, making the text hard to read.
+Medium - Make a user able to rank each factor. I'm thinking a number to the left of each factor, scrollable on mouse hover, on a scale of 1-10.
+Medium - Make the numbers on connections editable
+Medium - Refactoring the app state into App using context for a redux pattern.
 Hard - Heightened visibility of selected Options Boxes. If an Option Box is clicked, that box and all its connections should be easily visible. Currently only works for Factors Boxes.
 Hard - make it possible to add child Boxes to Factors for dealing with uncertainty
 

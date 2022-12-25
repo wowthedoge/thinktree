@@ -8,7 +8,7 @@ export interface BoxI {
 interface Props {
   id: number;
   type: string;
-  addRef: (ref: React.RefObject<HTMLDivElement>) => void;
+  addRef?: (ref: React.RefObject<HTMLDivElement>) => void;
   boxClicked: (id: number) => void;
   addChild?: () => void;
 }
@@ -40,8 +40,8 @@ const Box: React.FC<Props> = ({ id, type, addRef, boxClicked, addChild }) => {
   }, [boxRef]);
 
   useEffect(() => {
-    addRef(boxRef);
-  }, [addRef, boxRef]);
+    addRef && addRef(boxRef);
+  }, [addRef]);
 
   return (
     <div className="box" onClick={handleClick} ref={boxRef}>
