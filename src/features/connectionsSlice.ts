@@ -1,10 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { FactorBox, OptionBox } from "../components/Box";
+import { FactorBoxType } from "../components/FactorsColumn";
 
 export type Connection = {
-    from: string,
-    to: string,
+    from: number,
+    to: number,
     value: number,
+    type: FactorBoxType,
+    unit?: string,
 }
 
 const initialState: Connection[] = []
@@ -16,14 +18,13 @@ export const connectionsSlice = createSlice({
         addConnection: (state, action: PayloadAction<Connection>) => {
             state.push(action.payload)
         },
-        changeConnectionValue: (state, action: PayloadAction<Connection>) => {
-            state.map(connection =>
-                connection.from === action.payload.from && connection.to === action.payload.to ?
-                connection.value = action.payload.value : null
-            )
-        }
+        modifyConnection: (state, action: PayloadAction<Connection>) => {
+        const c = state.find(connection => connection.from === action.payload.from && connection.to === action.payload.to)
+        c!.type = action.payload.type
+        c!.value = action.payload.value
+        },
     },
 })
 
-export const { addConnection, changeConnectionValue } = connectionsSlice.actions
+export const { addConnection, modifyConnection } = connectionsSlice.actions
 export default connectionsSlice.reducer

@@ -10,7 +10,6 @@ import { ArcherElement } from "react-archer";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { addOption } from "../features/boxesSlice";
 import { addConnection } from "../features/connectionsSlice";
-import { number } from "echarts";
 
 const OptionsColumn: React.FC = () => {
   const options = useAppSelector((state) => state.boxes.options);
@@ -19,20 +18,28 @@ const OptionsColumn: React.FC = () => {
   const connections = useAppSelector((state) => state.connections);
 
   const addOptionButtonClicked = () => {
-    const newOption = options.length + 1;
+    const newOptionId = options.length + 1;
     //add an option
-    dispatch(addOption(newOption));
+    dispatch(addOption(newOptionId));
     //add connections from that option to all factors
     factors.map((factor) =>
       dispatch(
         addConnection({
-          from: "factor" + factor,
-          to: "option" + newOption,
+          from: factor.id,
+          to: newOptionId,
           value: 0,
+          type: factor.type,
         })
       )
     );
   };
+
+  const getDisplay = (optionId:number) => {
+    const connsForOption = connections.filter(c => c.to === optionId)
+    const lowerBetter = connsForOption.find(c => c.type==="Lower is better")
+    const higherBetter = connsForOption.find(c => c.type==="Higher is better")
+    return `${Math.round(higherBetter!.value*100/lowerBetter!.value)/100}`
+  }
 
   return (
     <div className="column options-column">
@@ -43,15 +50,7 @@ const OptionsColumn: React.FC = () => {
               <Box col={1} type="option" />
             </div>
           </ArcherElement>
-          <ResultDisplay
-            total={connections.reduce(
-              (total, connection) =>
-                connection.to === "option" + option
-                  ? connection.value + total
-                  : total,
-              0
-            )}
-          />
+          <ResultDisplay display={getDisplay(option)} />
         </div>
       ))}
       <button className="add-box-button" onClick={addOptionButtonClicked}>
@@ -61,8 +60,8 @@ const OptionsColumn: React.FC = () => {
   );
 };
 
-const ResultDisplay = (Props: { total: Number }) => {
-  return <div className="result-display">{Props.total as ReactNode}</div>;
+const ResultDisplay = (Props: { display: string }) => {
+  return <div className="result-display">{Props.display}</div>;
 };
 
 export default OptionsColumn;

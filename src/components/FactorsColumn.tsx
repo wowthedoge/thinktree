@@ -3,97 +3,129 @@ import Box from "./Box";
 import { ArcherElement } from "react-archer";
 import { RelationType } from "react-archer/lib/types";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { addFactor } from "../features/boxesSlice";
-import { addConnection, changeConnectionValue } from "../features/connectionsSlice"
-import { Connection } from "../features/connectionsSlice"
+import { addFactor, changeFactorType } from "../features/boxesSlice";
+import {
+  addConnection,
+  modifyConnection,
+} from "../features/connectionsSlice";
+import { Connection } from "../features/connectionsSlice";
+
+export type FactorBoxType = "Higher is better" | "Lower is better" | "Yes/No";
+
+export type FactorBox = {
+  id: number;
+  type: FactorBoxType;
+};
 
 const FactorsColumn: React.FC = () => {
   const factors = useAppSelector((state) => state.boxes.factors);
   const options = useAppSelector((state) => state.boxes.options);
   const dispatch = useAppDispatch();
-  const connections = useAppSelector(state => state.connections)
-
-  let colorList: string[] = [
-    "rgba(206, 129, 121)",
-    "rgba(220, 163, 130)",
-    "rgba(209, 199, 136)",
-    "rgba(143, 185, 140)",
-    "rgba(134, 157, 178)",
-    "rgba(166, 130, 159)",
-  ];
-  // const colorPicker: (number: number, opacity: number) => string = (
-  //   number,
-  //   opacity
-  // ) =>
-  //   colorList[(number - 1) % (colorList.length - 1)].replace(
-  //     ")",
-  //     `,${opacity})`
-  //   );
+  const connections = useAppSelector((state) => state.connections);
 
   const addFactorButtonClicked = () => {
-    const newFactor = factors.length+1
+    const newFactorId = factors.length + 1;
     //add a factor
-    dispatch(addFactor(newFactor))
+    dispatch(addFactor({ id: newFactorId, type: "Higher is better" }));
     //add connections from that factor to all options
-    options.map(option => dispatch(addConnection({
-      from:"factor"+newFactor,
-      to:"option"+option,
-      value:0,
-    })))
-  }
+    options.map((option) =>
+      dispatch(
+        addConnection({
+          from: newFactorId,
+          to: option,
+          value: 0,
+          type: "Higher is better",
+        })
+      )
+    );
+  };
 
-  const archerRelationsList: (color: string, factor:Number) => RelationType[] = (color, factor) => 
+  const onFactorTypeChanged = (newType: FactorBoxType, id: number) => {
+    dispatch(
+      changeFactorType({
+        id: id,
+        type: newType,
+      })
+    );
+    // all connections from this changed Factor
+    connections.filter(connection => connection.from === id).map(
+      connection => dispatch(
+        modifyConnection({
+          ...connection,
+          type: newType
+        })
+      )
+    )
+  };
+
+  const archerRelationsList: (
+    color: string,
+    factor: Number
+  ) => RelationType[] = (color, factor) =>
     // For drawing the connections
-    connections.filter(connection => connection.from === "factor" + factor)
-    .map(connection => ({
-      targetId: connection.to,
-      targetAnchor: "left",
-      sourceAnchor: "right",
-      style: { strokeColor: color, strokeWidth: 4 },
-      label: <Value connection={connection} color="white"/>,
-    }))
-
-
+    connections
+      .filter((connection) => connection.from === factor)
+      .map((connection) => ({
+        targetId: "option" + connection.to.toString(),
+        targetAnchor: "left",
+        sourceAnchor: "right",
+        style: { strokeColor: color, strokeWidth: 4 },
+        label: <Value connection={connection} color="white" />,
+      }));
 
   return (
     <div className="column">
       {factors.map((factor) => (
-        <ArcherElement id={"factor" + factor} 
-        relations={archerRelationsList("grey", factor)}>
-          <div
-            style={{
-              borderRadius: "10px",
-              // backgroundColor: colorPicker(d, d === selectedId ? 1 : 0.3),
-              backgroundColor: "white",
-            }}
+        <div>
+          <ArcherElement
+            id={"factor" + factor.id}
+            relations={archerRelationsList("grey", factor.id)}
           >
-            <Box col={0} type="factor" />
-          </div>
-        </ArcherElement>
+            <div
+              style={{
+                borderRadius: "10px",
+                // backgroundColor: colorPicker(d, d === selectedId ? 1 : 0.3),
+                backgroundColor: "white",
+              }}
+            >
+              <Box col={0} type="factor" />
+            </div>
+          </ArcherElement>
+          <select
+            onChange={(e) =>
+              onFactorTypeChanged(e.target.value as FactorBoxType, factor.id)
+            }
+          >
+            <option>Higher is better</option>
+            <option>Lower is better</option>
+            <option>Yes/No</option>
+          </select>
+        </div>
       ))}
 
-      <button
-        className="add-box-button"
-        onClick={addFactorButtonClicked}
-      >
+      <button className="add-box-button" onClick={addFactorButtonClicked}>
         +
       </button>
     </div>
   );
 };
 
-const Value = (Props: { connection:Connection, color: string }) => {
-  const [value, setValue] = useState<number | string>(Props.connection.value.toString());
+const Value = (Props: { connection: Connection; color: string }) => {
+  const [value, setValue] = useState<number | string>(
+    Props.connection.value.toString()
+  );
   const dispatch = useAppDispatch();
 
   const updateValue = (val: string, e: FormEvent<HTMLInputElement>) => {
     e && e.preventDefault();
     setValue(val);
-    console.log(val)
-    dispatch(changeConnectionValue({
-      ...Props.connection,
-      value:Number(val)
-    }))
+    console.log(val);
+    dispatch(
+      modifyConnection({
+        ...Props.connection,
+        value: Number(val),
+      })
+    );
   };
 
   return (

@@ -1,19 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "./styles.css";
 
-// const FactorTypes = {
-//   HIGHER_BETTER,
-//   LOWER_BETTER,
-//   YESNO,
-// }
-
-export type OptionBox = {
-}
-
-export type FactorBox = {
-
-}
-
 interface Props {
   // id: number;
   col: number;
@@ -55,11 +42,6 @@ const Box: React.FC<Props> = ({ col, type }) => {
         role="textbox"
         contentEditable={contentEditable}
       ></span>
-      {/* {type === "factor" && (
-        <button className="add-split-button" onClick={()=>{}}>
-          +
-        </button>
-      )} */}
     </div>
   );
 };
