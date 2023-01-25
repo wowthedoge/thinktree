@@ -1,46 +1,68 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Box from "./Box";
 import { ArcherElement } from "react-archer";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { addOption } from "../features/boxesSlice";
+import { addConnection } from "../features/connectionsSlice";
+import { number } from "echarts";
 
-interface Props {
-  getRefsList: (refsList: React.RefObject<HTMLDivElement>[]) => void;
-  getNbList: (nbList: number[]) => void;
-}
+const OptionsColumn: React.FC = () => {
+  const options = useAppSelector((state) => state.boxes.options);
+  const factors = useAppSelector((state) => state.boxes.factors);
+  const dispatch = useAppDispatch();
+  const connections = useAppSelector((state) => state.connections);
 
-const OptionsColumn: React.FC<Props> = ({ getRefsList, getNbList }) => {
-  const refsSet = useRef<Set<React.RefObject<HTMLDivElement>>>(new Set());
-
-  const [optionsNbList, setOptionsNbList] = useState<number[]>([1, 2]);
-
-  const addRef: (ref: React.RefObject<HTMLDivElement>) => void = (ref) => {
-    refsSet.current.add(ref);
+  const addOptionButtonClicked = () => {
+    const newOption = options.length + 1;
+    //add an option
+    dispatch(addOption(newOption));
+    //add connections from that option to all factors
+    factors.map((factor) =>
+      dispatch(
+        addConnection({
+          from: "factor" + factor,
+          to: "option" + newOption,
+          value: 0,
+        })
+      )
+    );
   };
-
-  useEffect(() => getNbList(optionsNbList), [optionsNbList, getNbList]);
-
-  useEffect(
-    () => getRefsList(Array.from(refsSet.current.values())),
-    [refsSet, getRefsList]
-  );
-
-  const addOption = () => {
-    setOptionsNbList([...optionsNbList, optionsNbList.length + 1]);
-  };
-
-  const boxClicked = () => {};
 
   return (
     <div className="column options-column">
-      {optionsNbList.map((n) => (
-        <ArcherElement id={"option" + n} key={"option" + n}>
-          <div>
-            <Box id={n} type="option" addRef={addRef} boxClicked={boxClicked} />
-          </div>
-        </ArcherElement>
+      {options.map((option) => (
+        <div className="option-result-container">
+          <ArcherElement id={"option" + option} key={"option" + option}>
+            <div>
+              <Box col={1} type="option" />
+            </div>
+          </ArcherElement>
+          <ResultDisplay
+            total={connections.reduce(
+              (total, connection) =>
+                connection.to === "option" + option
+                  ? connection.value + total
+                  : total,
+              0
+            )}
+          />
+        </div>
       ))}
-      <button className="add-box-button" onClick={addOption}>+</button>
+      <button className="add-box-button" onClick={addOptionButtonClicked}>
+        +
+      </button>
     </div>
   );
+};
+
+const ResultDisplay = (Props: { total: Number }) => {
+  return <div className="result-display">{Props.total as ReactNode}</div>;
 };
 
 export default OptionsColumn;

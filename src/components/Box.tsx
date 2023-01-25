@@ -1,19 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./styles.css";
 
-export interface BoxI {
-  ref: React.RefObject<HTMLDivElement>;
+// const FactorTypes = {
+//   HIGHER_BETTER,
+//   LOWER_BETTER,
+//   YESNO,
+// }
+
+export type OptionBox = {
+}
+
+export type FactorBox = {
+
 }
 
 interface Props {
-  id: number;
+  // id: number;
+  col: number;
   type: string;
-  addRef?: (ref: React.RefObject<HTMLDivElement>) => void;
-  boxClicked: (id: number) => void;
-  addChild?: () => void;
 }
 
-const Box: React.FC<Props> = ({ id, type, addRef, boxClicked, addChild }) => {
+const Box: React.FC<Props> = ({ col, type }) => {
+
+
   const [contentEditable, setContentEditable] = useState<"true" | "false">(
     "false"
   );
@@ -22,7 +31,6 @@ const Box: React.FC<Props> = ({ id, type, addRef, boxClicked, addChild }) => {
   const handleClick: () => void = () => {
     setContentEditable("true");
     boxRef.current?.classList.add("box__active");
-    boxClicked(id);
   };
 
   useEffect(() => {
@@ -39,9 +47,6 @@ const Box: React.FC<Props> = ({ id, type, addRef, boxClicked, addChild }) => {
     };
   }, [boxRef]);
 
-  useEffect(() => {
-    addRef && addRef(boxRef);
-  }, [addRef]);
 
   return (
     <div className="box" onClick={handleClick} ref={boxRef}>
@@ -50,7 +55,11 @@ const Box: React.FC<Props> = ({ id, type, addRef, boxClicked, addChild }) => {
         role="textbox"
         contentEditable={contentEditable}
       ></span>
-      {type === "factor" && <button className="add-child-button" onClick={addChild}>+</button>}
+      {/* {type === "factor" && (
+        <button className="add-split-button" onClick={()=>{}}>
+          +
+        </button>
+      )} */}
     </div>
   );
 };

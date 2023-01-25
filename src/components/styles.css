@@ -54,7 +54,7 @@
   border: none;
 }
 
-.add-child-button {
+.add-split-button {
   position: absolute;
   width: 25px;
   height: 25px;
@@ -73,7 +73,7 @@
   justify-content: space-evenly;
 }
 
-.child-column {
+.split-column {
   align-content: stretch;
 }
 
@@ -85,6 +85,16 @@
   text-align: center;
   border: none;
   outline: none;
+}
+
+.option-result-container {
+  display: flex;
+  align-items: center;
+}
+
+.result-display {
+  margin-left: 1.2rem;
+  color: white;
 }
 
 input[type=number]::-webkit-inner-spin-button, 

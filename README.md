@@ -2,7 +2,7 @@
 
 A simple web app for clear decision making.
 
-## How it works (not done)
+## How it works (under construction)
 
 Decision making can be difficult. This app aims to streamline the process. You enter the variables, the uncertainties, and let the app visualize the best option for you. First,
 

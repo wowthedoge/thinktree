@@ -1,31 +1,17 @@
-import React, {
-  ChangeEvent,
-  FormEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FormEvent, useContext, useState } from "react";
 import Box from "./Box";
 import { ArcherElement } from "react-archer";
 import { RelationType } from "react-archer/lib/types";
+import { useAppSelector, useAppDispatch } from "../hooks";
+import { addFactor } from "../features/boxesSlice";
+import { addConnection, changeConnectionValue } from "../features/connectionsSlice"
+import { Connection } from "../features/connectionsSlice"
 
-interface Props {
-  getRefsList: (refsList: React.RefObject<HTMLDivElement>[]) => void;
-  getFactorsList: (newFactors: number[]) => void;
-  optionsList: number[];
-}
-
-const FactorsColumn: React.FC<Props> = ({
-  getRefsList,
-  getFactorsList,
-  optionsList,
-}) => {
-  const refsSet = useRef<Set<React.RefObject<HTMLDivElement>>>(new Set());
-  const [factorList, setFactorList] = useState<number[]>([]);
-  const [selectedId, setSelectedId] = useState<number>(0);
-  const addRef: (ref: React.RefObject<HTMLDivElement>) => void = (ref) => {
-    refsSet.current.add(ref);
-  };
+const FactorsColumn: React.FC = () => {
+  const factors = useAppSelector((state) => state.boxes.factors);
+  const options = useAppSelector((state) => state.boxes.options);
+  const dispatch = useAppDispatch();
+  const connections = useAppSelector(state => state.connections)
 
   let colorList: string[] = [
     "rgba(206, 129, 121)",
@@ -35,84 +21,79 @@ const FactorsColumn: React.FC<Props> = ({
     "rgba(134, 157, 178)",
     "rgba(166, 130, 159)",
   ];
-  const colorPicker: (number: number, opacity: number) => string = (
-    number,
-    opacity
-  ) =>
-    colorList[(number - 1) % (colorList.length - 1)].replace(
-      ")",
-      `,${opacity})`
-    );
+  // const colorPicker: (number: number, opacity: number) => string = (
+  //   number,
+  //   opacity
+  // ) =>
+  //   colorList[(number - 1) % (colorList.length - 1)].replace(
+  //     ")",
+  //     `,${opacity})`
+  //   );
 
-  useEffect(
-    () => getRefsList(Array.from(refsSet.current.values())),
-    [refsSet, getRefsList]
-  );
+  const addFactorButtonClicked = () => {
+    const newFactor = factors.length+1
+    //add a factor
+    dispatch(addFactor(newFactor))
+    //add connections from that factor to all options
+    options.map(option => dispatch(addConnection({
+      from:"factor"+newFactor,
+      to:"option"+option,
+      value:0,
+    })))
+  }
 
-  const archerRelationsList: (
-    color: string,
-    selected: boolean
-  ) => RelationType[] = (color, selected) =>
+  const archerRelationsList: (color: string, factor:Number) => RelationType[] = (color, factor) => 
     // For drawing the connections
-    optionsList.map((o) => ({
-      targetId: "option" + o,
+    connections.filter(connection => connection.from === "factor" + factor)
+    .map(connection => ({
+      targetId: connection.to,
       targetAnchor: "left",
       sourceAnchor: "right",
-      style: { strokeColor: color, strokeWidth: selected ? 4 : 2 },
-      label: selected ? (
-        // <div style={{ marginTop: "-30px", color: color }}> a </div>
-        <Value color={color} />
-      ) : null,
-    }));
+      style: { strokeColor: color, strokeWidth: 4 },
+      label: <Value connection={connection} color="white"/>,
+    }))
 
-  const addFactor = () => {
-    let newFactorList: number[] = [...factorList, factorList.length + 1];
-    setFactorList(newFactorList);
-    getFactorsList(newFactorList);
-  };
 
-  const boxClicked: (id: number) => void = (id) => {
-    setSelectedId(id);
-  };
 
   return (
     <div className="column">
-      {factorList.map((d) => (
-        <ArcherElement
-          key={"factor" + d}
-          id={"factor" + d}
-          relations={archerRelationsList(
-            colorPicker(d, d === selectedId ? 1 : 0.3),
-            selectedId === d
-          )}
-        >
+      {factors.map((factor) => (
+        <ArcherElement id={"factor" + factor} 
+        relations={archerRelationsList("grey", factor)}>
           <div
             style={{
               borderRadius: "10px",
-              backgroundColor: colorPicker(d, d === selectedId ? 1 : 0.3),
+              // backgroundColor: colorPicker(d, d === selectedId ? 1 : 0.3),
+              backgroundColor: "white",
             }}
           >
-            <Box id={d} type="factor" addRef={addRef} boxClicked={boxClicked} />
+            <Box col={0} type="factor" />
           </div>
         </ArcherElement>
       ))}
 
-      <button className="add-box-button" onClick={addFactor}>
+      <button
+        className="add-box-button"
+        onClick={addFactorButtonClicked}
+      >
         +
       </button>
     </div>
   );
 };
 
-const Value = (Props: { color: string }) => {
-  const [value, setValue] = useState<number | string>("0");
+const Value = (Props: { connection:Connection, color: string }) => {
+  const [value, setValue] = useState<number | string>(Props.connection.value.toString());
+  const dispatch = useAppDispatch();
 
-  const updateValue = (
-    val: number | "",
-    e: FormEvent<HTMLInputElement> | FormEvent<HTMLInputElement>
-  ) => {
+  const updateValue = (val: string, e: FormEvent<HTMLInputElement>) => {
     e && e.preventDefault();
     setValue(val);
+    console.log(val)
+    dispatch(changeConnectionValue({
+      ...Props.connection,
+      value:Number(val)
+    }))
   };
 
   return (
@@ -127,7 +108,10 @@ const Value = (Props: { color: string }) => {
         }}
         value={value}
         onChange={(e) =>
-          updateValue(Number((e.target as HTMLInputElement).value), e)
+          updateValue(
+            Number((e.target as HTMLInputElement).value).toString(),
+            e
+          )
         }
         type="number"
         inputMode="numeric"
