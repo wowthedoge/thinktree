@@ -12,7 +12,10 @@ const OptionsColumn: React.FC = () => {
   const addOptionButtonClicked = () => {
     const newOptionId = options.length + 1;
     //add an option
-    dispatch(addOption(newOptionId));
+    dispatch(addOption({
+      id: newOptionId,
+      selected:false,
+    }));
     //add connections from that option to all factors
     factors.map((factor) =>
       dispatch(
@@ -20,7 +23,7 @@ const OptionsColumn: React.FC = () => {
           from: factor.id,
           to: newOptionId,
           value: 0,
-          type: factor.type,
+          selected: false,
         })
       )
     );
@@ -29,7 +32,7 @@ const OptionsColumn: React.FC = () => {
   return (
     <div className="column options-column">
       {options.map((option) => (
-        <OptionBox id={option} />
+          <OptionBox option={option} />
       ))}
       <button className="add-box-button" onClick={addOptionButtonClicked}>
         +

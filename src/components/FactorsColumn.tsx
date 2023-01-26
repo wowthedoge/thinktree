@@ -16,15 +16,15 @@ const FactorsColumn: React.FC = () => {
   const addFactorButtonClicked = () => {
     const newFactorId = factors.length + 1;
     //add a factor
-    dispatch(addFactor({ id: newFactorId, type: "Higher is better", label:""}));
+    dispatch(addFactor({ id: newFactorId, type: "Higher is better", label:"", selected: false}));
     //add connections from that factor to all options
     options.map((option) =>
       dispatch(
         addConnection({
           from: newFactorId,
-          to: option,
+          to: option.id,
           value: 0,
-          type: "Higher is better",
+          selected: false,
         })
       )
     );

@@ -5,10 +5,15 @@ import Box from "./Box";
 import { Connection } from "../features/connectionsSlice";
 
 interface Props {
-  id: number;
+  option: TypeOptionBox;
 }
 
-const OptionBox: React.FC<Props> = ({ id }) => {
+export type TypeOptionBox = {
+  id: number;
+  selected: boolean;
+}
+
+const OptionBox: React.FC<Props> = ({ option }) => {
   const connections = useAppSelector((state) => state.connections);
   const factors = useAppSelector((state) => state.boxes.factors);
 
@@ -51,12 +56,12 @@ const OptionBox: React.FC<Props> = ({ id }) => {
   };
   return (
     <div className="option-result-container">
-      <ArcherElement id={"option" + id} key={"option" + id}>
+      <ArcherElement id={"option" + option.id} key={"option" + option.id}>
         <div>
-          <Box id={id} type="option" />
+          <Box id={option.id} type="option" selected={option.selected}/>
         </div>
       </ArcherElement>
-      <ResultDisplay display={getDisplay(id)} />
+      <ResultDisplay display={getDisplay(option.id)} />
     </div>
   );
 };

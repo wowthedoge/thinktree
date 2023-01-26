@@ -1,16 +1,37 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "./styles.css";
-import { useAppDispatch } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { selectConnectionsByBox } from "../features/connectionsSlice";
+import { selectBox } from "../features/boxesSlice";
 
 interface Props {
   // id: number;
   id: number;
-  type: string;
+  type: "factor" | "option";
   labelChange?: (newLabel: string, id: number) => void;
+  selected: boolean;
 }
 
-const Box: React.FC<Props> = ({ id, type, labelChange }) => {
+const Box: React.FC<Props> = ({ id, type, labelChange, selected }) => {
   const [value, setValue] = useState("");
+
+  const dispatch = useAppDispatch();
+
+  const onBoxClick = (e: React.MouseEvent) => {
+    //select all connections to/from this box
+    dispatch(
+      selectConnectionsByBox({
+        type: type,
+        id: id,
+      })
+    );
+    dispatch(
+      selectBox({
+        type: type,
+        id: id,
+      })
+    );
+  };
 
   const onValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
@@ -48,6 +69,8 @@ const Box: React.FC<Props> = ({ id, type, labelChange }) => {
       className="box"
       value={value}
       onChange={(e) => onValueChange(e)}
+      onClick={(e) => onBoxClick(e)}
+      style={selected ? { border: "4px solid teal" } : {}}
     ></textarea>
   );
 };
