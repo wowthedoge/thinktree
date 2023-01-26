@@ -6,7 +6,7 @@ const store = configureStore({
     reducer: {
         boxes: boxesReducer,
         connections: connectionsReducer,
-    }
+    } 
 })
 
 export default store
