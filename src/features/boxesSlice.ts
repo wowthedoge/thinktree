@@ -1,13 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { FactorBox } from '../components/FactorsColumn'
+import { TypeFactorBox, FactorBoxType } from '../components/FactorBox'
 
 
 interface BoxesState {
-    factors: FactorBox[],
+    factors: TypeFactorBox[],
     options: number[],
 }
-
-
 
 const initialState: BoxesState = {
     factors: [],
@@ -18,7 +16,7 @@ export const boxesSlice = createSlice({
     name: 'boxes',
     initialState,
     reducers: {
-        addFactor: (state, action: PayloadAction<FactorBox>) => {
+        addFactor: (state, action: PayloadAction<TypeFactorBox>) => {
             state.factors.push(action.payload)
         },
 
@@ -26,11 +24,25 @@ export const boxesSlice = createSlice({
             state.options.push(action.payload)
         },
 
-        changeFactorType: (state, action: PayloadAction<FactorBox>) => {
+        changeFactorType: (state, action: PayloadAction<newFactorTypePayload>) => {
             state.factors.map(factor => factor.id === action.payload.id ? factor.type = action.payload.type : null)
+        },
+
+        changeFactorLabel: (state, action: PayloadAction<newFactorLabelPayload>) => {
+            state.factors.map(factor => factor.id === action.payload.id ? factor.label = action.payload.label : null)
         }
     }
 })
 
-export const { addFactor, addOption, changeFactorType } = boxesSlice.actions
+type newFactorTypePayload = {
+    type: FactorBoxType;
+    id: number;
+}
+
+type newFactorLabelPayload = {
+    label: string;
+    id: number;
+}
+
+export const { addFactor, addOption, changeFactorType, changeFactorLabel } = boxesSlice.actions
 export default boxesSlice.reducer

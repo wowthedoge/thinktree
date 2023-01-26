@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { FactorBoxType } from "../components/FactorsColumn";
+import { FactorBoxType } from "../components/FactorBox";
 
 export type Connection = {
     from: number,
